@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>for you</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 107, 107, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 170, 204, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(186, 85, 211, 0.1) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            z-index: 1;
+        }
+
+        .start-screen {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 60px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+        }
+
+        .start-screen.hide {
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+
+        .envelope-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .start-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .start-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .open-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .open-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+        }
+
+        .open-btn:active {
+            transform: translateY(0);
+        }
+
+        .message-screen {
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+            transition: all 0.6s ease;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .message-screen.show {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .message-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 25px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .message-content h2 {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .message-content p {
+            color: #2d3436;
+            line-height: 1.8;
+            margin-bottom: 18px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .message-content p:last-child {
+            margin-top: 30px;
+            font-style: italic;
+            color: #636e72;
+            font-size: 15px;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .heart-particle {
+            position: absolute;
+            font-size: 24px;
+            animation: floatUp 5s ease-in infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(var(--tx)) rotate(360deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .sparkle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 10px white;
+            animation: twinkle 2s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .message-content::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .message-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .message-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 107, 107, 0.4);
+            border-radius: 10px;
+        }
+
+        .message-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 107, 107, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <div class="container">
+        <div class="start-screen" id="startScreen">
+            <div class="envelope-icon">💌</div>
+            <h1 class="start-title">Ada Pesan Spesial</h1>
+            <p class="start-subtitle">Buat kamu yang istimewa </p>
+            <button class="open-btn" id="openBtn">Buka Sekarang</button>
+        </div>
+
+        <div class="message-screen" id="messageScreen">
+            <div class="message-content">
+                <h2>Hai Sayang 💕</h2>
+                <p>Aku cuma mau bilang...</p>
+                <p>Kamu itu spesial banget buat aku </p>
+                <p>Setiap hari bareng kamu tuh bikin aku bahagia. Makasih udah jadi orang yang selalu ada, yang selalu ngerti, dan yang bikin hidup aku lebih berwarna.</p>
+                <p>Kamu adalah alasan aku tersenyum setiap hari </p>
+                <p>Terima kasih sudah jadi bagian terbaik dalam hidupku 💖</p>
+                <p> love you moree! ❤️</p>
+                <p>— Yang sayang kamu —</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const openBtn = document.getElementById('openBtn');
+        const startScreen = document.getElementById('startScreen');
+        const messageScreen = document.getElementById('messageScreen');
+        const floatingHearts = document.getElementById('floatingHearts');
+
+        openBtn.addEventListener('click', function() {
+            startScreen.classList.add('hide');
+            
+            setTimeout(() => {
+                messageScreen.classList.add('show');
+                createFloatingHearts();
+                createSparkles();
+            }, 300);
+        });
+
+        function createFloatingHearts() {
+            const hearts = ['❤️', '💕', '💖', '💗', '💝', '💓', '💗', '💞'];
+            
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-particle';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = (Math.random() * 100) + '%';
+                    heart.style.bottom = '-50px';
+                    heart.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+                    heart.style.animationDelay = (Math.random() * 2) + 's';
+                    floatingHearts.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 120);
+            }
+        }
+
+        function createSparkles() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = (Math.random() * 100) + '%';
+                    sparkle.style.top = (Math.random() * 100) + '%';
+                    sparkle.style.animationDelay = (Math.random() * 2) + 's';
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 70);
+            }
+        }
+    </script>
+</body>
+</html>
